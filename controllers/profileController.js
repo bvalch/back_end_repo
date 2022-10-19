@@ -1,13 +1,10 @@
 const Profile = require('../models/ProfileSchema');
 const Users = require('../models/UserSchema');
 const jwt = require('jsonwebtoken');
-// const cookies = req.cookies;
-// const refreshToken = cookies.jwtCookie;
 const ObjectId = require('mongodb').ObjectId;
 
 
 const createProfile = async (req, res) => {
-    // console.log(req.body)
     const cookies = req.cookies
     const refreshToken = cookies.jwtCookie
     const foundUser = await Users.findOne({ refreshToken: refreshToken }).exec();
@@ -33,7 +30,6 @@ const getProfile = async (req, res) => {
     const refreshToken = cookies.jwtCookie
     try {
         const foundUser = await Users.findOne({ refreshToken: refreshToken }).exec();
-        // console.log('profile controller found user is '+ foundUser._id)
         const id = foundUser._id;
         const foundProfile = await Profile.findOne({ profileOwner: id })
         res.json(foundProfile)
@@ -42,7 +38,6 @@ const getProfile = async (req, res) => {
     }
 }
 const getForeignProfile = async (req, res) => {
-    // console.log(req.params.id)
 
     try {
         const user = await Users.findOne({ userName: req.params.id });
@@ -58,7 +53,6 @@ const updateProfile = async (req, res) => {
     const refreshToken = cookies.jwtCookie
     try {
         const foundUser = await Users.findOne({ refreshToken: refreshToken }).exec();
-        // console.log('profile controller found user is '+ foundUser._id)
         const id = foundUser._id;
 
         const foundProfile = await Profile.findOne({ profileOwner: id });
@@ -70,7 +64,22 @@ const updateProfile = async (req, res) => {
 
         res.json(result)
     } catch (err) {
-        console.error(err); res.status(69)
+        console.error(err); res.status(409)
+    }
+}
+
+const deleteProfile = async (req, res) => {
+    const cookies = req.cookies
+    const refreshToken = cookies.jwtCookie
+    try {
+        const foundUser = await Users.findOne({ refreshToken: refreshToken }).exec();
+        const id = foundUser._id;
+
+        const result = await Profile.deleteOne({ profileOwner: id });
+        
+        res.json(result)
+    } catch (err) {
+        console.error(err); res.status(409)
     }
 
 
@@ -78,5 +87,10 @@ const updateProfile = async (req, res) => {
 }
 
 
-
-module.exports = { createProfile, getProfile, updateProfile, getForeignProfile }
+module.exports = {
+    createProfile,
+    getProfile,
+    updateProfile,
+    getForeignProfile,
+    deleteProfile
+}

@@ -1,6 +1,5 @@
 const Hike = require('../models/HikeSchema');
 const User = require('../models/UserSchema')
-const UserSchema = require('../models/UserSchema');
 
 const getAllHikes = async (req, res) => {
     const hikes = await Hike.find();
@@ -10,15 +9,19 @@ const getAllHikes = async (req, res) => {
 const createNewHike = async (req, res) => {
     if (!req?.body?.origin || !req?.body?.destination) {
         return res.status(400).json({ "message": "origin and destination fields are required" })
-
     }
-    // console.log(req.body.hikeDate)
+    console.log(req.body)
+    const cookies = req.cookies
+    const refreshToken = cookies.jwtCookie
+    const owner = await User.findOne({ refreshToken })
+    console.log(owner)
 
     try {
         result = await Hike.create({
             hikeOrigin: req.body.origin,
             hikeDestination: req.body.destination,
             hikeInfo: req.body.info,
+            hikeOwner:owner.userName
             // hikeDate: parseInt(req.body.hikeDate)
             // hikeTime: parseInt(req.body.time)
         }
@@ -70,7 +73,7 @@ const joinHike = async (req, res) => {
         const hikeID = req.body.hikeID;
         const hike = await Hike.findOne({ _id: hikeID })
         const user = await User.findOne({ refreshToken })
-        if(hike.hikeAtt.includes(user.userName)){return res.status(409).json({'message':"you are already attending"})}
+        if (hike.hikeAtt.includes(user.userName)) { return res.status(409).json({ 'message': "you are already attending" }) }
         hike.hikeAtt.push(user.userName)
         const result = await hike.save();
         res.json(result)

@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 
 const handleNewUser = async (req, res) => {
     const { user, pass } = req.body;
-    // console.log(req.body)
     if (!user || !pass) return res.status(400).json({ 'message': "uname or pass are required" })
     const duplicate = await User.findOne({ userName: user }).exec();
     if (duplicate) return res.sendStatus(409);
@@ -12,11 +11,10 @@ const handleNewUser = async (req, res) => {
         const hashPass = await bcrypt.hash(pass, 10)
         const newUser = { "username": user, "password": hashPass };
         result = await User.create({
-        "userName":user,
-        "pass":hashPass
+            "userName": user,
+            "pass": hashPass
         });
 
-        // console.log(result);
         res.status(201).json({ 'epic win': `new user ${user} created!` })
 
     } catch (err) {

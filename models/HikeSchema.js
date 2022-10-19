@@ -18,6 +18,9 @@ const hikeSchema = new Schema({
     },
     hikeAtt:{
         type:Array
+    },
+    hikeOwner:{
+    type:String
     }
     // hikeDate: {
     //     type: Date
