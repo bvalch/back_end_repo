@@ -22,29 +22,35 @@ const createProfile = async (req, res) => {
         res.status(201).json({ 'message': 'greteast success' });
 
 
-    } catch (err) { console.error(err) }
+    } catch (err) { console.error('lalal' + err) }
 };
 
 const getProfile = async (req, res) => {
     const cookies = req.cookies
     const refreshToken = cookies.jwtCookie
+    console.log('asd' + refreshToken)
     try {
         const foundUser = await Users.findOne({ refreshToken: refreshToken }).exec();
         const id = foundUser._id;
         const foundProfile = await Profile.findOne({ profileOwner: id })
         res.json(foundProfile)
     } catch (err) {
-        console.error(err); res.status(69)
+        console.error('llal'+err); res.status(69)
     }
 }
 const getForeignProfile = async (req, res) => {
+    console.log(req.params.id)
+    // console.log('trigger')
 
     try {
         const user = await Users.findOne({ userName: req.params.id });
+        console.log(user.userName)
         const foreignProfile = await Profile.findOne({ profileOwner: user._id });
         console.log(foreignProfile)
-        res.json(foreignProfile)
-    } catch (err) { console.error(err) }
+        const result ={...foreignProfile,screenName:user['userName']}
+        console.log(result)
+        res.json(result)
+    } catch (err) { console.error('lalala'+ err) }
 
 }
 
@@ -64,7 +70,7 @@ const updateProfile = async (req, res) => {
 
         res.json(result)
     } catch (err) {
-        console.error(err); res.status(409)
+        console.error('lalala'+err); res.status(409)
     }
 }
 
@@ -79,7 +85,7 @@ const deleteProfile = async (req, res) => {
         
         res.json(result)
     } catch (err) {
-        console.error(err); res.status(409)
+        console.error('profile ctrl line 82' + err); res.status(409)
     }
 
 

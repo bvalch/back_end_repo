@@ -12,7 +12,7 @@ const connectToDb = async () => {
 
     }
     catch (error) {
-        console.error(error)
+        console.error('lalala'+error)
     }
 
 };

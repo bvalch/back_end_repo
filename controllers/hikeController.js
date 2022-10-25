@@ -10,11 +10,11 @@ const createNewHike = async (req, res) => {
     if (!req?.body?.origin || !req?.body?.destination) {
         return res.status(400).json({ "message": "origin and destination fields are required" })
     }
-    console.log(req.body)
+    console.log('create new hike' + req.body)
     const cookies = req.cookies
     const refreshToken = cookies.jwtCookie
     const owner = await User.findOne({ refreshToken })
-    console.log(owner)
+    console.log("create hike" + owner)
 
     try {
         result = await Hike.create({
@@ -29,7 +29,7 @@ const createNewHike = async (req, res) => {
         )
         res.status(201).json(result);
 
-    } catch (error) { console.error(error) }
+    } catch (error) { console.error('hike ctrl ln 32' + error) }
 }
 
 const updateHike = async (req, res) => {
@@ -79,7 +79,7 @@ const joinHike = async (req, res) => {
         res.json(result)
         res.status(201).json({ 'message': `success, added user ${user.userName} to hike ID ${hike._id}` })
     } catch (err) {
-        console.error(err)
+        console.error('hike contrl'+err)
     }
 
 }

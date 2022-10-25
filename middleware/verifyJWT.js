@@ -9,7 +9,6 @@ const verifyJWT = (req, res, next) => {
         token,
         process.env.ACESS_TOKEN_KEY,
         (error, decoded) => {
-           
             if(error) {console.log('jwt err'); return res.sendStatus(403)}
             if (error) { console.error('ERROR in verifyJWT line 18 '+ error); return res.sendStatus(403)};
             req.user = decoded.username;

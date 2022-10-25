@@ -6,11 +6,10 @@ const handleLogin = async (req, res) => {
     const { user, pass } = req.body;
     // change status to sendstatus
     if (!user || !pass) return res.status(400).json({ 'error': 'uname andd pass required' });
-
     const foundUser = await User.findOne({userName:user}).exec();
-
     if (!foundUser) return res.sendStatus(401);
 
+    
     const verifyPass = await bcrypt.compare(pass, foundUser.pass);
 
     if (verifyPass) {
