@@ -7,7 +7,8 @@ const getAllHikes = async (req, res) => {
     res.json(hikes)
 }
 const createNewHike = async (req, res) => {
-    if (!req?.body?.origin || !req?.body?.destination) {
+    console.log(req.body)
+    if (!req?.body?.hikeOrigin || !req?.body?.hikeDestination) {
         return res.status(400).json({ "message": "origin and destination fields are required" })
     }
     console.log('create new hike' + req.body)
@@ -18,12 +19,13 @@ const createNewHike = async (req, res) => {
 
     try {
         result = await Hike.create({
-            hikeOrigin: req.body.origin,
-            hikeDestination: req.body.destination,
-            hikeInfo: req.body.info,
-            hikeOwner:owner.userName
-            // hikeDate: parseInt(req.body.hikeDate)
-            // hikeTime: parseInt(req.body.time)
+            hikeOrigin: req.body.hikeOrigin,
+            hikeDestination: req.body.hikeDestination,
+            hikeInfo: req.body.hikeInfo,
+            hikeOwner:owner.userName,
+            hikeDate: req.body.hikeDate,
+            hikeTime: req.body.hikeTime,
+            hikeTransport:req.body.hikeTransport
         }
 
         )

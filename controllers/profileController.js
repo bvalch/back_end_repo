@@ -28,7 +28,7 @@ const createProfile = async (req, res) => {
 const getProfile = async (req, res) => {
     const cookies = req.cookies
     const refreshToken = cookies.jwtCookie
-    console.log('asd' + refreshToken)
+    // console.log('asd' + refreshToken)
     try {
         const foundUser = await Users.findOne({ refreshToken: refreshToken }).exec();
         const id = foundUser._id;

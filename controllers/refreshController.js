@@ -19,9 +19,9 @@ const handleRefresh = async (req, res) => {
                 {return res.status(403).json({'msg':'f this'})}};
             const acessToken = jwt.sign(
                 { "username": decoded.username },
-                process.env.ACESS_TOKEN_KEY, { expiresIn: '3s' }
+                process.env.ACESS_TOKEN_KEY, { expiresIn: '1d' }
             );
-            res.json({ acessToken });
+            res.json({acessToken });
 
         }
     );

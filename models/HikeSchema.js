@@ -21,13 +21,19 @@ const hikeSchema = new Schema({
     },
     hikeOwner:{
     type:String
+    },
+    hikeTransport:{
+        type:String
+    },
+    hikeDate: {
+        type: String
+    },
+    hikeTime: {
+        type: String
+    },
+    hikeComments:{
+        type:Array
     }
-    // hikeDate: {
-    //     type: Date
-    // },
-    // hikeTime: {
-    //     type: Date
-    // }
 
 
 
