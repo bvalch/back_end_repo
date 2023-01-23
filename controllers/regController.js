@@ -12,7 +12,8 @@ const handleNewUser = async (req, res) => {
         const newUser = { "username": user, "password": hashPass };
         result = await User.create({
             "userName": user,
-            "pass": hashPass
+            "pass": hashPass,
+            "comments":[]
         });
 
         res.status(201).json({ 'epic win': `new user ${user} created!` })

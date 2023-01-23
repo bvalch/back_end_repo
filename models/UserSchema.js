@@ -15,6 +15,9 @@ const userSchema = new Schema({
     },
     refreshToken: {
         type: String
+    }, 
+     comments:{
+        type:Array
     }
    
 

@@ -25,7 +25,8 @@ const createNewHike = async (req, res) => {
             hikeOwner:owner.userName,
             hikeDate: req.body.hikeDate,
             hikeTime: req.body.hikeTime,
-            hikeTransport:req.body.hikeTransport
+            hikeTransport:req.body.hikeTransport,
+            hikeComments:[]
         }
 
         )
