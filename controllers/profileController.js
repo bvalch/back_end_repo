@@ -8,16 +8,10 @@ const createProfile = async (req, res) => {
     const cookies = req.cookies
     const refreshToken = cookies.jwtCookie
     const foundUser = await Users.findOne({ refreshToken: refreshToken }).exec();
-
+    console.log(req.body)
     try {
-
         result = await Profile.create({
-            personName: req.body.name,
-            personAge: req.body.age,
-            personInfo: req.body.info,
-            personLocation: req.body.location,
-            profileOwner: foundUser._id
-
+         ...req.body, profileOwner: foundUser._id
         })
         res.status(201).json({ 'message': 'greteast success' });
 

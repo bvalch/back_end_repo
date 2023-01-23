@@ -37,7 +37,6 @@ const getAllCommentsForAHike=async(req,res)=>{
     console.log(req.params)
     if(!req?.params?.id) return res.status(401).json({"message":"hike id required"})
     const hikeWithComments = await Hike.findById({_id:req.params.id})
-    console.log(hikeWithComments)
     const commentPromises = hikeWithComments.hikeComments.map(comment => Comment.findById({ _id: comment._id }));
     const commentResults = await Promise.all(commentPromises);
     const commentArray = commentResults.map(result => result);
@@ -48,7 +47,7 @@ const getAllCommentsForAHike=async(req,res)=>{
 
 
 //todo:
-//find all comments for given hike id
+//find all comments for given hike id - done
 //find all comments for given user
 //delete comment
 //update comment
