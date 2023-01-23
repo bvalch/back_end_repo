@@ -4,7 +4,7 @@ const User = require("../models/UserSchema")
 
 
 const postCommentToHike= async (req,res)=>{
-    console.log(req.body)
+    // console.log(req.body)
     if(!req?.body?.hikeToComment || !req?.body?.comment || !req?.body?.time){
         return res.status(401).json({"message":"comment, hike_id and date required"})
     }
@@ -33,11 +33,30 @@ const postCommentToHike= async (req,res)=>{
 
 }
 
+const getAllCommentsForAHike=async(req,res)=>{
+    console.log(req.params)
+    if(!req?.params?.id) return res.status(401).json({"message":"hike id required"})
+    const hikeWithComments = await Hike.findById({_id:req.params.id})
+    console.log(hikeWithComments)
+    const commentPromises = hikeWithComments.hikeComments.map(comment => Comment.findById({ _id: comment._id }));
+    const commentResults = await Promise.all(commentPromises);
+    const commentArray = commentResults.map(result => result);
+    
+    res.status(200).json(commentArray)
+
+}
 
 
+//todo:
+//find all comments for given hike id
+//find all comments for given user
+//delete comment
+//update comment
+//find one comment for given user maybe?
 
 
 
 module.exports={
-    postCommentToHike
+    postCommentToHike,
+    getAllCommentsForAHike
 }
