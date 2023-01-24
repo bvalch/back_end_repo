@@ -1,9 +1,10 @@
 const Hike = require("../models/HikeSchema");
 const Comment = require("../models/CommentSchema")
-const User = require("../models/UserSchema")
+const User = require("../models/UserSchema");
 
 
 const postCommentToHike= async (req,res)=>{
+    console.log("HITTING POST COMMENT ROUTE")
     // console.log(req.body)
     if(!req?.body?.hikeToComment || !req?.body?.comment || !req?.body?.time){
         return res.status(401).json({"message":"comment, hike_id and date required"})
@@ -34,14 +35,23 @@ const postCommentToHike= async (req,res)=>{
 }
 
 const getAllCommentsForAHike=async(req,res)=>{
-    console.log(req.params)
+    console.log("HITTING ROUTE FOR HIKE COMMENTS?")
+    // console.log(req.params)
     if(!req?.params?.id) return res.status(401).json({"message":"hike id required"})
     const hikeWithComments = await Hike.findById({_id:req.params.id})
     const commentPromises = hikeWithComments.hikeComments.map(comment => Comment.findById({ _id: comment._id }));
     const commentResults = await Promise.all(commentPromises);
     const commentArray = commentResults.map(result => result);
+    console.log(commentArray)
     
     res.status(200).json(commentArray)
+
+};
+const getAllCommentsForUser=async(req,res)=>{
+    console.log("HITTING ROUTE FOR USER COMMENT")
+    // const user = await User.findOne({refreshToken:req.cookies.jwtCookie}).exec();
+    // const commentsArray = await Comment.find({author_id:user._id})
+    // console.log(commentsArray)
 
 }
 
@@ -57,5 +67,6 @@ const getAllCommentsForAHike=async(req,res)=>{
 
 module.exports={
     postCommentToHike,
-    getAllCommentsForAHike
+    getAllCommentsForAHike,
+    getAllCommentsForUser
 }

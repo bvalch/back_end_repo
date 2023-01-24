@@ -29,7 +29,9 @@ app.use('/refresh', require('./routes/refreshRoute'));
 app.use(verifyJWT)
 app.use('/hikes', require('./routes/hikeRouter'));
 app.use('/profile',require('./routes/profileRoute'));
-app.use('/hikes/comment',require("./routes/commentRoute"))
+
+
+app.use('/comment',require("./routes/commentRoute"))
 // app.use('/getprofile',require('./routes/profileRoute'));
 
 
