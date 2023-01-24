@@ -1,7 +1,6 @@
 const Profile = require('../models/ProfileSchema');
 const Users = require('../models/UserSchema');
 const jwt = require('jsonwebtoken');
-const ObjectId = require('mongodb').ObjectId;
 
 
 const createProfile = async (req, res) => {
@@ -13,7 +12,7 @@ const createProfile = async (req, res) => {
         result = await Profile.create({
          ...req.body, profileOwner: foundUser._id
         })
-        res.status(201).json({ 'message': 'greteast success' });
+        res.status(201).json(result);
 
 
     } catch (err) { console.error('lalal' + err) }
