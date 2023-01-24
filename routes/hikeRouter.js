@@ -10,6 +10,8 @@ router.route('/')
 
 router.route('/:id')
     .get(hikeController.getHikeById)
+router.route("/all/:id")
+    .get(hikeController.getAllHikesByUserId)
 
 router.route('/join')
     .post(hikeController.joinHike)

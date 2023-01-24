@@ -1,6 +1,5 @@
 const Profile = require('../models/ProfileSchema');
 const Users = require('../models/UserSchema');
-const jwt = require('jsonwebtoken');
 
 
 const createProfile = async (req, res) => {
@@ -13,9 +12,7 @@ const createProfile = async (req, res) => {
          ...req.body, profileOwner: foundUser._id
         })
         res.status(201).json(result);
-
-
-    } catch (err) { console.error('lalal' + err) }
+    } catch (err) { console.error('ln 15 profileCtrl' + err) }
 };
 
 const getProfile = async (req, res) => {
@@ -28,13 +25,11 @@ const getProfile = async (req, res) => {
         const foundProfile = await Profile.findOne({ profileOwner: id })
         res.json(foundProfile)
     } catch (err) {
-        console.error('llal'+err); res.status(69)
+        console.error('ln 28 profileCnt'+err); res.status(69)
     }
 }
 const getForeignProfile = async (req, res) => {
     console.log(req.params.id)
-    // console.log('trigger')
-
     try {
         const user = await Users.findOne({ userName: req.params.id });
         console.log(user.userName)
@@ -43,7 +38,7 @@ const getForeignProfile = async (req, res) => {
         const result ={...foreignProfile,screenName:user['userName']}
         console.log(result)
         res.json(result)
-    } catch (err) { console.error('lalala'+ err) }
+    } catch (err) { console.error('ln 41 profileCnt'+ err) }
 
 }
 
@@ -58,7 +53,7 @@ const updateProfile = async (req, res) => {
         const result = await Profile.findOne({profileOwner:id})
         res.json(result)
     } catch (err) {
-        console.error('lalala'+err); res.status(409)
+        console.error('ln 56 profileCnt'+err); res.status(409)
     }
 }
 
@@ -68,12 +63,10 @@ const deleteProfile = async (req, res) => {
     try {
         const foundUser = await Users.findOne({ refreshToken: refreshToken }).exec();
         const id = foundUser._id;
-
         const result = await Profile.deleteOne({ profileOwner: id });
-        
         res.json(result)
     } catch (err) {
-        console.error('profile ctrl line 82' + err); res.status(409)
+        console.error('ln 82 profileCnt' + err); res.status(409)
     }
 
 

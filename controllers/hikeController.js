@@ -1,5 +1,6 @@
 const Hike = require('../models/HikeSchema');
 const User = require('../models/UserSchema')
+const Profile=require("../models/ProfileSchema")
 
 const getAllHikes = async (req, res) => {
     const hikes = await Hike.find();
@@ -64,6 +65,29 @@ const getHikeById = async (req, res) => {
     res.json(result)
 
 }
+const getAllHikesByUserId=async(req,res)=>{
+//params id carries the profile id
+console.log(req.body)
+    if (!req?.params?.id) return res.sendStatus(400).json({ "message": "id required" })
+    //im passing profile id, so find the mathing profile first
+    const profile = await Profile.findById({_id:req.params.id}).exec();
+    //now find the user associated with that profile
+    const user = await User.findById({_id:profile.profileOwner})
+    // console.log(user)
+    //now find all the hikes where hikeOwner matches userName
+    const hikes = await Hike.find({hikeOwner:user.userName})
+    // console.log(hikes)
+    res.json(hikes)
+
+
+
+
+
+    // const profile = await Profile.findById({_id:req.params.id}).exec()
+    // const profileOwnerUserName = profile.userName
+    // const hikes = await Hike.find({hikeOwner:profileOwnerUserName})
+    // console.log(hikes)
+}
 
 const joinHike = async (req, res) => {
     if (!req.body.hikeID) return res.status(400).json({ "message": "id required" })
@@ -93,5 +117,6 @@ module.exports = {
     deleteHike,
     updateHike,
     createNewHike,
-    joinHike
+    joinHike,
+    getAllHikesByUserId
 }
