@@ -51,10 +51,18 @@ const getAllCommentsForUser=async(req,res)=>{
 
 const deleteComment=async(req,res)=>{
     if (!req?.body.commentId) return res.sendStatus(400).json({ "message": "id required" })
-    console.log(req.body)
+    console.log(req.body.commentId)
+    //63d03e2fff4aee2e1f6d00df
     const commentToRemove = await Comment.findById({_id:req.body.commentId})
-const result = await Comment.deleteOne({_id:commentToRemove._id})
-res.status(200).json({"message":"success"})
+    const hikeToUpdate = await Hike.findById({_id:req.body.hikeId})
+    const commentArray = hikeToUpdate.hikeComments.filter((comment)=>!comment._id.equals(commentToRemove._id))
+    await Hike.updateOne({_id:hikeToUpdate._id},{hikeComments :commentArray})
+    await Comment.deleteOne({_id:commentToRemove._id})
+    // //remember to remove comment from hike comments array as well, moron;
+    // console.log(commentToRemove._id.equals( hikeToUpdate.hikeComments[0]._id))
+
+
+    res.status(200).json({"message":"success"})
 }
     
 
