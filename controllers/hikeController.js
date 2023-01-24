@@ -67,18 +67,17 @@ const getHikeById = async (req, res) => {
 
 }
 const getAllHikesByUserId=async(req,res)=>{
-//params id carries the profile id
-console.log(req.body)
+
     if (!req?.params?.id || req?.params?.id === undefined) return res.sendStatus(400).json({ "message": "id required" })
-    //im passing profile id, so find the mathing profile first
-    const profile = await Profile.findById({_id:req.params.id}).exec();
-    //now find the user associated with that profile
-    const user = await User.findById({_id:profile.profileOwnerId})
-    // console.log(user)
-    //now find all the hikes where hikeOwner matches userName
+   
+    // //now find the user associated with that profile
+    const user = await User.findById({_id:req.params.id})
+    // // console.log(user)
+    // //now find all the hikes where hikeOwner matches userName
     const hikes = await Hike.find({hikeOwner:user.userName})
-    // console.log(hikes)
-    res.json(hikes)
+    console.log(hikes)
+    if(hikes.length===0)res.sendStatus(204).json({"message":"no entries found"})
+    res.status(200).json(hikes)
 
 
 }

@@ -18,10 +18,10 @@ const handleRefresh = async (req, res) => {
             if (error ) {console.log('error in refreshController line 20')
                 {return res.status(403).json({'msg':'f this'})}};
             const acessToken = jwt.sign(
-                { "username": decoded.username },
+                { "username": decoded.username,"userId":foundUser._id },
                 process.env.ACESS_TOKEN_KEY, { expiresIn: '1d' }
             );
-            res.json({acessToken });
+            res.json({acessToken, });
 
         }
     );
