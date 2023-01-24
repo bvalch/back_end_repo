@@ -24,6 +24,7 @@ const createNewHike = async (req, res) => {
             hikeDestination: req.body.hikeDestination,
             hikeInfo: req.body.hikeInfo,
             hikeOwner:owner.userName,
+            hikeOwnerId:owner._id,
             hikeDate: req.body.hikeDate,
             hikeTime: req.body.hikeTime,
             hikeTransport:req.body.hikeTransport,
@@ -72,7 +73,7 @@ console.log(req.body)
     //im passing profile id, so find the mathing profile first
     const profile = await Profile.findById({_id:req.params.id}).exec();
     //now find the user associated with that profile
-    const user = await User.findById({_id:profile.profileOwner})
+    const user = await User.findById({_id:profile.profileOwnerId})
     // console.log(user)
     //now find all the hikes where hikeOwner matches userName
     const hikes = await Hike.find({hikeOwner:user.userName})
@@ -80,13 +81,6 @@ console.log(req.body)
     res.json(hikes)
 
 
-
-
-
-    // const profile = await Profile.findById({_id:req.params.id}).exec()
-    // const profileOwnerUserName = profile.userName
-    // const hikes = await Hike.find({hikeOwner:profileOwnerUserName})
-    // console.log(hikes)
 }
 
 const joinHike = async (req, res) => {

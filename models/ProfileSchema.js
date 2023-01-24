@@ -6,18 +6,30 @@ const profileSchema = new Schema({
 
     personName: {
         type: String,
+        required:true
     },
     personAge: {
         type: Number,
+        required:true
+
     },
     personLocation: {
-        type: String
+        type: String,
+        required:true
+
     },
     personInfo: {
-        type: String
+        type: String,
+        required:true
+
     },
-    profileOwner: {
-        type: String
+    profileOwnerId: {
+        type: String,
+        required:true
+    },
+    profileOwnerAlias:{
+        type:String,
+        required:true
     }
 
 });

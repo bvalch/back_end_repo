@@ -20,7 +20,8 @@ const hikeSchema = new Schema({
         type:Array
     },
     hikeOwner:{
-    type:String
+    type:String,
+    required:true
     },
     hikeTransport:{
         type:String
@@ -33,6 +34,10 @@ const hikeSchema = new Schema({
     },
     hikeComments:{
         type:Array
+    },
+    hikeOwnerId:{
+        type:String,
+        required:true
     }
 
 
