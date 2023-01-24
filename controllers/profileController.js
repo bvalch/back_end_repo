@@ -54,13 +54,8 @@ const updateProfile = async (req, res) => {
         const foundUser = await Users.findOne({ refreshToken: refreshToken }).exec();
         const id = foundUser._id;
 
-        const foundProfile = await Profile.findOne({ profileOwner: id });
-        foundProfile.personName = req.body.name;
-        foundProfile.personAge = req.body.age;
-        foundProfile.personInfo = req.body.info;
-        foundProfile.personLocation = req.body.location;
-        const result = await foundProfile.save()
-
+        await Profile.updateOne({ profileOwner: id },req.body);
+        const result = await Profile.findOne({profileOwner:id})
         res.json(result)
     } catch (err) {
         console.error('lalala'+err); res.status(409)
