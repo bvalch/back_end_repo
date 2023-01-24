@@ -4,8 +4,7 @@ const User = require("../models/UserSchema");
 
 
 const postCommentToHike= async (req,res)=>{
-    console.log("HITTING POST COMMENT ROUTE")
-    // console.log(req.body)
+    
     if(!req?.body?.hikeToComment || !req?.body?.comment || !req?.body?.time){
         return res.status(401).json({"message":"comment, hike_id and date required"})
     }
@@ -27,38 +26,42 @@ const postCommentToHike= async (req,res)=>{
             //we send back the hike to be stored in state and the comment to be stored in state
             res.status(201).json({commentCreateResult,updatedHike})
 
-
-
         }catch(err){console.error(err)}
    
 
 }
 
 const getAllCommentsForAHike=async(req,res)=>{
-    console.log("HITTING ROUTE FOR HIKE COMMENTS?")
-    // console.log(req.params)
+   
     if(!req?.params?.id) return res.status(401).json({"message":"hike id required"})
     const hikeWithComments = await Hike.findById({_id:req.params.id})
     const commentPromises = hikeWithComments.hikeComments.map(comment => Comment.findById({ _id: comment._id }));
     const commentResults = await Promise.all(commentPromises);
     const commentArray = commentResults.map(result => result);
-    console.log(commentArray)
-    
+    if(!commentArray) return res.sendStatus(204).json({"message":"you do not have any comments"})     
     res.status(200).json(commentArray)
 
 };
 const getAllCommentsForUser=async(req,res)=>{
-    console.log("HITTING ROUTE FOR USER COMMENT")
-    // const user = await User.findOne({refreshToken:req.cookies.jwtCookie}).exec();
-    // const commentsArray = await Comment.find({author_id:user._id})
-    // console.log(commentsArray)
+    const user = await User.findOne({refreshToken:req.cookies.jwtCookie}).exec();
+    const commentsArray = await Comment.find({author_id:user._id})
+    res.status(200).json(commentsArray)
 
 }
+
+const deleteComment=async(req,res)=>{
+    if (!req?.body.commentId) return res.sendStatus(400).json({ "message": "id required" })
+    console.log(req.body)
+    const commentToRemove = await Comment.findById({_id:req.body.commentId})
+const result = await Comment.deleteOne({_id:commentToRemove._id})
+res.status(200).json({"message":"success"})
+}
+    
 
 
 //todo:
 //find all comments for given hike id - done
-//find all comments for given user
+//find all comments for given user -done
 //delete comment
 //update comment
 //find one comment for given user maybe?
@@ -68,5 +71,6 @@ const getAllCommentsForUser=async(req,res)=>{
 module.exports={
     postCommentToHike,
     getAllCommentsForAHike,
-    getAllCommentsForUser
+    getAllCommentsForUser,
+    deleteComment
 }
