@@ -76,8 +76,8 @@ const getAllHikesByUserId=async(req,res)=>{
     // //now find all the hikes where hikeOwner matches userName
     const hikes = await Hike.find({hikeOwner:user.userName})
     console.log(hikes)
-    if(hikes.length===0)res.sendStatus(204).json({"message":"no entries found"})
-    res.status(200).json(hikes)
+    if(hikes.length===0){res.sendStatus(204).json({"message":"no entries found"})}else{
+    res.status(200).json(hikes)}
 
 
 }

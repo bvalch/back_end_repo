@@ -32,6 +32,7 @@ app.use('/profile',require('./routes/profileRoute'));
 
 
 app.use('/comment',require("./routes/commentRoute"))
+app.use('/message', require("./routes/messageRoute"))
 // app.use('/getprofile',require('./routes/profileRoute'));
 
 
