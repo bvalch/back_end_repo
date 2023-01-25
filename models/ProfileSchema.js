@@ -30,6 +30,9 @@ const profileSchema = new Schema({
     profileOwnerAlias:{
         type:String,
         required:true
+    },
+    profilePhoto:{
+        type:String
     }
 
 });

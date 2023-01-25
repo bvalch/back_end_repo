@@ -1,15 +1,40 @@
 const Profile = require('../models/ProfileSchema');
 const Users = require('../models/UserSchema');
+const multer = require("multer");
+// const upload=multer({dest:"../front_end_repo/public/photo"})
+
+const multerStorage=multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null,"../front_end_repo/public/photo")
+    },
+    filename:(req,file,cb)=>{
+        const extension = file.mimetype.split("/")[1];
+        cb(null,`user-${req.body.profileOwnerId}-${Date.now()}.${extension}`)
+    }
+});
+const multerFilter = (req,file,cb)=>{
+    if(file.mimetype.startsWith("image")){
+        cb(null,true)}else{
+            cb("error", false)
+        }
+} 
+const upload=multer({
+    storage:multerStorage,
+    fileFilter:multerFilter
+})
+const uploadUserPhoto=upload.single("photo")
 
 
 const createProfile = async (req, res) => {
+    //TODO:: write in DB a default photo filed and link it on the front end
+    console.log(req.body)
     const cookies = req.cookies
     const refreshToken = cookies.jwtCookie
     const foundUser = await Users.findOne({ refreshToken: refreshToken }).exec();
     console.log(req.body)
     try {
         result = await Profile.create({
-         ...req.body, profileOwnerId: foundUser._id,profileOwnerAlias:foundUser.userName
+         ...req.body, profileOwnerId: foundUser._id,profileOwnerAlias:foundUser.userName, profilePhoto:"/photo/default.jpg"
         })
         res.status(201).json(result);
     } catch (err) { console.error('ln 15 profileCtrl' + err) }
@@ -41,8 +66,12 @@ const getForeignProfile = async (req, res) => {
 }
 
 const updateProfile = async (req, res) => {
+    console.log(req.file,"file")
+    console.log(req.body,"body")
+    
     const cookies = req.cookies
     const refreshToken = cookies.jwtCookie
+    // console.log(refreshToken)
     try {
         const foundUser = await Users.findOne({ refreshToken: refreshToken }).exec();
         const id = foundUser._id;
@@ -77,5 +106,6 @@ module.exports = {
     getProfile,
     updateProfile,
     getForeignProfile,
-    deleteProfile
+    deleteProfile,
+    uploadUserPhoto
 }
