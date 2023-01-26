@@ -4,7 +4,7 @@ const hikeController = require('../controllers/hikeController')
 //TODO CONFLICT IN ROUTES
 router.route('/')
     .get(hikeController.getAllHikes)
-    .post(hikeController.createNewHike)
+    .post(hikeController.uploadHikeCover,hikeController.createNewHike)
     .put(hikeController.updateHike)
     .delete(hikeController.deleteHike)
 

@@ -1,18 +1,46 @@
 const Hike = require('../models/HikeSchema');
 const User = require('../models/UserSchema')
 const Profile=require("../models/ProfileSchema")
+const multer = require("multer");
+const multerStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "../front_end_repo/public/cover");
+    },
+    filename: async (req, file, cb) => {
+        console.log(req.file)
+      const user = await User.findOne({ userName: req.user });
+      const extension = file.mimetype.split("/")[1];
+      cb(null, `user-${user._id}-${Date.now()}.${extension}`);
+    },
+  });
+  const multerFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith("image")) {
+      cb(null, true);
+    } else {
+      cb("error", false);
+    }
+  };
+  const upload = multer({
+    storage: multerStorage,
+    fileFilter: multerFilter,
+  });
+  const uploadHikeCover = upload.single("hikeCover");
+
+
 
 const getAllHikes = async (req, res) => {
     const hikes = await Hike.find();
     if (!hikes) {return res.sendStatus(204).json({ "message:": "nothing here yet" })}else{
     res.json(hikes)}
 }
+
+
 const createNewHike = async (req, res) => {
-    console.log(req.body)
+    
     if (!req?.body?.hikeOrigin || !req?.body?.hikeDestination) {
         return res.status(400).json({ "message": "origin and destination fields are required" })
     }
-    console.log('create new hike' + req.body)
+    // console.log('create new hike' + req.body)
     const cookies = req.cookies
     const refreshToken = cookies.jwtCookie
     const owner = await User.findOne({ refreshToken })
@@ -28,7 +56,8 @@ const createNewHike = async (req, res) => {
             hikeDate: req.body.hikeDate,
             hikeTime: req.body.hikeTime,
             hikeTransport:req.body.hikeTransport,
-            hikeComments:[]
+            hikeComments:[],
+            hikeCover:req?.file?.filename ||"default.jpg"
         }
 
         )
@@ -36,6 +65,8 @@ const createNewHike = async (req, res) => {
 
     } catch (error) { console.error('hike ctrl ln 32' + error) }
 }
+
+
 
 const updateHike = async (req, res) => {
     if (!req?.body?.id) return res.sendStatus(400).json({ "message": "something went wrong" })
@@ -111,5 +142,6 @@ module.exports = {
     updateHike,
     createNewHike,
     joinHike,
-    getAllHikesByUserId
+    getAllHikesByUserId,
+    uploadHikeCover,
 }

@@ -112,7 +112,6 @@ const updateMessageThread = async (req, res) => {
       el.read = true;
     }
   });
-  console.log(commentArray);
 
   try {
     await messageThread.updateOne({ $set: { threadMessages: commentArray } });

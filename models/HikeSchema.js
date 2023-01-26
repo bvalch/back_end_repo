@@ -38,7 +38,10 @@ const hikeSchema = new Schema({
     hikeOwnerId:{
         type:String,
         required:true
-    }
+    },
+    hikeCover:{
+        type:String
+    },
 
 
 
