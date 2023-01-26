@@ -2,7 +2,6 @@ const User = require("../models/UserSchema");
 const MessageThread = require("../models/MessageThreadSchema");
 const Profile = require("../models/ProfileSchema");
 
-
 //TODO:try catch block here, this is a mess
 const createMessageThread = async (req, res) => {
   if (
@@ -34,8 +33,9 @@ const createMessageThread = async (req, res) => {
         Title: req.body.messageTitle,
         text: req.body.messageText,
         datestamp: dateStamp,
-        read:false,
-      }
+        read: false,
+        from: sender.userName,
+      },
     ],
   });
   const recepientId = recepient._id.toString();
@@ -50,10 +50,6 @@ const createMessageThread = async (req, res) => {
   await senderProfile.save();
   res.status(200).json({ message: "message sent!" });
 };
-
-
-
-
 
 const getAllMessageThreads = async (req, res) => {
   const cookies = req.cookies;
@@ -72,7 +68,55 @@ const getAllMessageThreads = async (req, res) => {
     // console.log(messagesSent[0].messageThreadParties[0])
     if (!messagesSent && !messagesRecieved)
       return res.status(204).json({ message: "you have no messages" });
-    res.status(200).json([messagesSent, messagesRecieved]);
+    res.status(200).json({ sent: messagesSent, recieved: messagesRecieved });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+//quick and dirty, no time
+const replyToMessageThread = async (req, res) => {
+  //   console.log(req.body);
+  //   console.log("hitting backend");
+  //find the thread
+  const thread = await MessageThread.findById({
+    _id: req.body.threadToAttachTo,
+  });
+  try {
+    const result = await thread.updateOne({
+      $push: {
+        threadMessages: {
+          Title: req.body.Title,
+          text: req.body.text,
+          datestamp: req.body.datestamp,
+          from: req.body.from,
+          read: false,
+        },
+      },
+    });
+    res.status(200).json({ message: "all good" });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const updateMessageThread = async (req, res) => {
+  console.log(req.body);
+  const userName = req.body.username;
+  const threadId = req.params.id;
+  const messageThread = await MessageThread.findById({ _id: threadId });
+  const commentArray = messageThread.threadMessages;
+
+  commentArray.forEach((el) => {
+    if (el.from !== userName) {
+      el.read = true;
+    }
+  });
+  console.log(commentArray);
+
+  try {
+    await messageThread.updateOne({ $set: { threadMessages: commentArray } });
+    res.status(200).json({"message":"success"});
   } catch (err) {
     console.error(err);
   }
@@ -81,4 +125,6 @@ const getAllMessageThreads = async (req, res) => {
 module.exports = {
   createMessageThread,
   getAllMessageThreads,
+  replyToMessageThread,
+  updateMessageThread,
 };
