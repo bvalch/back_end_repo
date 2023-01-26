@@ -33,6 +33,9 @@ const profileSchema = new Schema({
     },
     profilePhoto:{
         type:String
+    },
+    profileMessageThreads:{
+        type:Array
     }
 
 });

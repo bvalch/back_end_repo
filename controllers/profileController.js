@@ -37,6 +37,7 @@ const createProfile = async (req, res) => {
       profileOwnerId: foundUser._id,
       profileOwnerAlias: foundUser.userName,
       profilePhoto: "/default.png",
+      profileMessageThreads:[]
     });
     res.status(201).json(result);
   } catch (err) {
@@ -96,6 +97,7 @@ const updateProfile = async (req, res) => {
     const result = await Profile.findOne({ profileOwnerId: id });
     res.json(result);
   } catch (err) {
+    //todo when submitting with the form not populated it cant cass the null from age to integer or whatever, need to fix this
     console.error("ln 56 profileCnt" + err);
     res.status(409);
   }
