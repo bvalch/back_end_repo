@@ -4,8 +4,8 @@ const Profile=require("../models/ProfileSchema")
 
 const getAllHikes = async (req, res) => {
     const hikes = await Hike.find();
-    if (!hikes) return res.sendStatus(204).json({ "message:": "nothing here yet" })
-    res.json(hikes)
+    if (!hikes) {return res.sendStatus(204).json({ "message:": "nothing here yet" })}else{
+    res.json(hikes)}
 }
 const createNewHike = async (req, res) => {
     console.log(req.body)
@@ -61,24 +61,24 @@ const deleteHike = async (req, res) => {
 const getHikeById = async (req, res) => {
     if (!req?.params?.id) return res.sendStatus(400).json({ "message": "id required" })
     const hike = await Hike.findOne({ _id: req.body.id }).exec();
-    if (!hike) return res.sendStatus(204).json({ "message": "hike can not be found/doesnt exist" })
+    if (!hike) {return res.sendStatus(204).json({ "message": "hike can not be found/doesnt exist" })}else{
     const result = await hike.findOne({ _id: req.params.id })
-    res.json(result)
-
+    res.status(200).json(result)
+}
 }
 const getAllHikesByUserId=async(req,res)=>{
 
-    if (!req?.params?.id || req?.params?.id === undefined) return res.sendStatus(400).json({ "message": "id required" })
+    if (!req?.params?.id || req?.params?.id === undefined){return res.sendStatus(400).json({ "message": "id required" })} else{
    
     // //now find the user associated with that profile
     const user = await User.findById({_id:req.params.id})
     // // console.log(user)
     // //now find all the hikes where hikeOwner matches userName
     const hikes = await Hike.find({hikeOwner:user.userName})
-    console.log(hikes)
-    if(hikes.length===0){res.sendStatus(204).json({"message":"no entries found"})}else{
+    console.log(hikes.length)
+    if(hikes.length===0){res.status(204).json({"message":"no entries found"})}else{
     res.status(200).json(hikes)}
-
+}
 
 }
 

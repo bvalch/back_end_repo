@@ -8,6 +8,13 @@ const messageThreadSchema=new Schema({
         required:true
     
     },
+    messageThreadDate:{
+        type:String,
+        required:true
+    },
+    messageThreadTitle:{
+        type:String,
+    },
     messageThreadParties:{
         type:Array,
         required:true

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const hikeController = require('../controllers/hikeController')
-
+//TODO CONFLICT IN ROUTES
 router.route('/')
     .get(hikeController.getAllHikes)
     .post(hikeController.createNewHike)
@@ -10,6 +10,7 @@ router.route('/')
 
 router.route('/:id')
     .get(hikeController.getHikeById)
+
 router.route("/all/:id")
     .get(hikeController.getAllHikesByUserId)
 
